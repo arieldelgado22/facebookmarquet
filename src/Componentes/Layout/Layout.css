@@ -1,0 +1,14 @@
+.container-main { /* O la clase que envuelva todo el Layout */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; /* Esto estira el contenido para que el footer baje al fondo */
+}
+
+footer {
+    /* Opcional: te asegurás de que el footer no se achique */
+    flex-shrink: 0;
+}

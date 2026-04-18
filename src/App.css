@@ -1,0 +1,46 @@
+/* App.css */
+
+/* Reseteo básico para que no haya márgenes raros */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #aaaaa8; /* El gris clarito clásico de FB */
+    color: #1c1e21;
+}
+
+.container-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+   
+    /* Un gris muy suave, tipo Facebook/Instagram */
+    background-color: #f0f2f5; 
+}
+
+main {
+    flex: 1;
+    padding: 40px 5%;
+    display: flex;
+    flex-direction: row; /* Para que los asistentes se pongan uno al lado del otro */
+    flex-wrap: wrap;     /* Si no entran, bajan a la siguiente fila */
+    justify-content: center;
+    gap: 20px;           /* Espacio entre tarjetas */
+}
+
+footer {
+    /* Opcional: te asegurás de que el footer no se achique */
+    flex-shrink: 0;
+}
+
+.productos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    padding: 20px;
+}

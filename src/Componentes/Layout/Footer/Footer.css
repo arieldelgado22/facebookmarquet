@@ -1,0 +1,116 @@
+/* Footer.css */
+
+.footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e4e6eb; /* Una línea sutil para separar del contenido */
+    padding: 2rem 5%;
+    margin-top: auto; /* Empuja el footer hacia abajo si usas flex en el container */
+    color: #65676b;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Contenedor de las tarjetas */
+.team-grid {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+/* Estilo de cada tarjeta */
+.dev-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px;
+  width: 150px;
+  text-align: center;
+  border: 1px solid #444;
+}
+
+.dev-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%; /* Hace la imagen circular */
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.dev-info h4 {
+  font-size: 0.9rem;
+  margin: 5px 0;
+}
+
+.dev-info p {
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+.dev-info span {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.footer-brand h2 {
+    color: #1877f2;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    max-width: 250px;
+    line-height: 1.4;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-links li {
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.footer-links li:hover {
+    color: #1877f2;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f2f5;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+/* Responsive para celulares */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-links ul {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+}
