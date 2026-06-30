@@ -6,7 +6,7 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (product, quantity) => {
         const itemInCart = cart.find(item => item.id === product.id);
-        
+
         if (itemInCart) {
             const updatedCart = cart.map(item =>
                 item.id == product.id
@@ -34,14 +34,21 @@ export const CartProvider = ({ children }) => {
         setCart(prevCart => prevCart.filter(item => item.id !== id));
     };
 
+    // NUEVA FUNCIÓN: Obtener la cantidad de un item específico
+    const getCantidadActual = (productId) => {
+        const item = cart.find(item => item.id === productId);
+        return item ? item.cantidad : 0;
+    };
+
     return (
-        <CartContext.Provider value={{ 
-            cart, 
-            addToCart, 
-            clearCart, 
+        <CartContext.Provider value={{
+            cart,
+            getCantidadActual,
+            addToCart,
+            clearCart,
             removeItem,
-            getCartQuantity, 
-            getCartTotal 
+            getCartQuantity,
+            getCartTotal
         }}>
             {children}
         </CartContext.Provider>

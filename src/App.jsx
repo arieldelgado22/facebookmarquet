@@ -7,7 +7,7 @@ import Productos from './Componentes/Productos/Productos';
 import ProductoDetalle from './Componentes/Productos/ProductoDetalle';
 import Cart from './Componentes/Cart/Cart';
 import { FormularioContainer } from "./Componentes/FormularioProductos/FormularioContainer";
-
+import ProductosNacionales from './Componentes/Productos/ProductoNacionales';
 function App() {
 
 
@@ -19,6 +19,7 @@ function App() {
     <Route path="/productos/:id" element={<ProductoDetalle />} />
     <Route path="/carrito" element={<Cart />} /> 
     <Route path="/formulario" element={<FormularioContainer /> } />
+    <Route path="/ProductosNacionales" element={<ProductosNacionales />} />
   </Route>
 </Routes>
   );

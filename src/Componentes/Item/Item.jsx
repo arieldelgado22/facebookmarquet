@@ -7,6 +7,7 @@ export function Item({ id, nombre, precio, stock, imagen }) {
 
   const [cantidad, setCantidad] = useState(0);
   const { addToCart } = useCart();
+
   
   const handleAddToCart = () => {
     // 1. Creamos el objeto con los datos que tenemos
