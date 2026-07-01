@@ -1,0 +1,27 @@
+/* productosNacionalesDetalle.module.css */
+.CartaDetalle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-width: 500px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.titulo {
+    font-weight: bold; /* Negrita */
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.detalle {
+    margin: 10px 0;
+}
+
+.precio {
+    font-weight: bold; /* Negrita */
+    color: #e44d26;
+}

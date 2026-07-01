@@ -6,10 +6,11 @@ import "./Layout.css";
 export function Layout({ children }) {
   return (
     <div className="container-main">
-      <Header />
+     <Header />
       <main>
-        <Outlet />
-        {children}
+        <Outlet /> 
       </main>
       <Footer />
-    </div>);} 
+    </div>
+  );
+}

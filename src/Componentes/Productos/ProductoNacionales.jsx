@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { db } from "../../firebase/config";
-
+import { Link } from 'react-router-dom'; 
 const ProductosNacionales = () => {
 
     const [productos, setProductos] = useState([]);
@@ -14,12 +14,12 @@ const ProductosNacionales = () => {
                 })
             );
         })
-    }, []); 
+    }, []);
     return (
         <div>
             <h1>Productos Nacionales</h1>
             <div className="lista-productos">
-                {}
+                { }
                 {productos.map(prod => (
                     <div key={prod.id} >
                         <img src={prod.imagen} alt={prod.nombre} style={{
@@ -29,6 +29,7 @@ const ProductosNacionales = () => {
                         <p>Categoría: {prod.categoria}</p>
                         <p>Precio: ${prod.precio}</p>
                         <p>Stock: {prod.stock} unidades</p>
+                       <Link to={`/productos-nacionales/${prod.id}`}>Ver detalle</Link>
                         <hr />
                     </div>
                 ))}

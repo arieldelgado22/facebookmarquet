@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FormularioProducto } from './FormularioProducto';
-
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 export function FormularioContainer() {
   const [datosForm, setDatosForm] = useState({
     nombre: '',
@@ -24,13 +24,22 @@ export function FormularioContainer() {
 
     try {
       console.log("Procesando nuevo producto...");
-      
+
       // Simulamos una demora de red de 1.5 segundos
       await new Promise(resolve => setTimeout(resolve, 1500));
 
       console.log('Producto listo para guardar:', datosForm);
+      console.log('Enviando producto a Firebase:',
+        productoCompleto);
+      // Obtenemos la instancia de la base de datos
+      const db = getFirestore();
+      // Apuntamos a la colección "productos" (si no existe, se crea)
+      const productosCollection = collection(db, "productos nacionales");
+
+      await addDoc(productosCollection, productoCompleto);
+
       alert(`¡Producto "${datosForm.nombre}" listo!`);
-      
+
       // Opcional: Limpiar el formulario después de enviar
       setDatosForm({ nombre: '', precio: '', stock: '', urlImagen: '' });
 
@@ -44,7 +53,7 @@ export function FormularioContainer() {
   };
 
   return (
-    <FormularioProducto 
+    <FormularioProducto
       datosForm={datosForm}
       manejarCambio={manejarCambio}
       manejarEnvio={manejarEnvio}
