@@ -1,11 +1,13 @@
-// En /components/ItemList/ItemList.jsx
-import { Item } from "./Item";
+import { Item } from './Item';
+
 export function ItemList({ productos }) {
- return (
- <div style={{ display: 'flex', gap: '20px' }}>
- {productos.map(prod => (
- <Item key={prod.id} {...prod} />
- ))}
- </div>
- );
+  return (
+    <div className="row g-4">
+      {productos.map((prod) => (
+        <div className="col-12 col-md-6 col-xl-4" key={prod.id}>
+          <Item {...prod} />
+        </div>
+      ))}
+    </div>
+  );
 }

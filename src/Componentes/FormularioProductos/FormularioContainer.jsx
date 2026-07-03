@@ -1,63 +1,99 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormularioProducto } from './FormularioProducto';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
-export function FormularioContainer() {
-  const [datosForm, setDatosForm] = useState({
-    nombre: '',
-    precio: '',
-    stock: '',
-    urlImagen: '' // Volvemos a usar un string para la URL
-  });
+import {
+  createProductoNacional,
+  updateProductoNacional,
+} from '../../services/productosNacionalesService';
+import { uploadProductImage } from '../../services/imageUploadService';
 
+const emptyForm = {
+  nombre: '',
+  categoria: '',
+  precio: '',
+  stock: '',
+  imagen: '',
+};
+
+export function FormularioContainer({ productoEditando = null, onNotify, onSaved }) {
+  const [datosForm, setDatosForm] = useState({ ...emptyForm, ...productoEditando });
+  const [imagenArchivo, setImagenArchivo] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [localMessage, setLocalMessage] = useState(null);
+
+  useEffect(() => {
+    setDatosForm({ ...emptyForm, ...productoEditando });
+    setImagenArchivo(null);
+  }, [productoEditando]);
 
   const manejarCambio = (evento) => {
     const { name, value } = evento.target;
-    setDatosForm({ ...datosForm, [name]: value });
+    setDatosForm((currentForm) => ({ ...currentForm, [name]: value }));
+  };
+
+  const manejarImagen = (evento) => {
+    const file = evento.target.files?.[0] || null;
+    setImagenArchivo(file);
   };
 
   const manejarEnvio = async (evento) => {
     evento.preventDefault();
-
-    // Activamos el estado de carga
     setLoading(true);
 
     try {
-      console.log("Procesando nuevo producto...");
+      const action = productoEditando?.firebaseId ? 'update' : 'create';
+      const imagenSubida = imagenArchivo ? await uploadProductImage(imagenArchivo) : '';
+      const datosParaGuardar = {
+        ...datosForm,
+        imagen: imagenSubida || datosForm.imagen,
+      };
 
-      // Simulamos una demora de red de 1.5 segundos
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const productoGuardado = productoEditando?.firebaseId
+        ? await updateProductoNacional(productoEditando.firebaseId, datosParaGuardar)
+        : await createProductoNacional(datosParaGuardar);
 
-      console.log('Producto listo para guardar:', datosForm);
-      console.log('Enviando producto a Firebase:',
-        productoCompleto);
-      // Obtenemos la instancia de la base de datos
-      const db = getFirestore();
-      // Apuntamos a la colección "productos" (si no existe, se crea)
-      const productosCollection = collection(db, "productos nacionales");
+      const message = action === 'update'
+        ? `Producto "${productoGuardado.nombre}" actualizado correctamente.`
+        : `Producto "${productoGuardado.nombre}" agregado correctamente.`;
+      const type = action === 'update' ? 'primary' : 'success';
 
-      await addDoc(productosCollection, productoCompleto);
+      if (onNotify) {
+        onNotify({ message, type });
+      } else {
+        setLocalMessage({ message, type });
+      }
 
-      alert(`¡Producto "${datosForm.nombre}" listo!`);
-
-      // Opcional: Limpiar el formulario después de enviar
-      setDatosForm({ nombre: '', precio: '', stock: '', urlImagen: '' });
-
+      setDatosForm(emptyForm);
+      setImagenArchivo(null);
+      onSaved?.(productoGuardado, action);
     } catch (error) {
-      console.error("Error:", error);
-      alert("Hubo un error al procesar el formulario.");
+      console.error('Error:', error);
+      const notification = { message: 'Hubo un error al guardar el producto.', type: 'danger' };
+      if (onNotify) {
+        onNotify(notification);
+      } else {
+        setLocalMessage(notification);
+      }
     } finally {
-      // Desactivamos la carga siempre
       setLoading(false);
     }
   };
 
   return (
-    <FormularioProducto
-      datosForm={datosForm}
-      manejarCambio={manejarCambio}
-      manejarEnvio={manejarEnvio}
-      loading={loading}
-    />
+    <>
+      {localMessage && (
+        <div className={`alert alert-${localMessage.type}`} role="alert">
+          {localMessage.message}
+        </div>
+      )}
+      <FormularioProducto
+        datosForm={datosForm}
+        esEdicion={Boolean(productoEditando?.firebaseId)}
+        manejarCambio={manejarCambio}
+        manejarImagen={manejarImagen}
+        manejarEnvio={manejarEnvio}
+        imagenArchivo={imagenArchivo}
+        loading={loading}
+      />
+    </>
   );
 }

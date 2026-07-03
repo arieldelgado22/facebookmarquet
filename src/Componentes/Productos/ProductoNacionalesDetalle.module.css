@@ -1,27 +1,57 @@
-/* productosNacionalesDetalle.module.css */
-.CartaDetalle {
-    display: flex;
-    flex-direction: column;
+.detailCard {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+    overflow: hidden;
+}
+
+.imageArea {
     align-items: center;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    max-width: 500px;
-    margin: 20px auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    min-height: 460px;
+    padding: 32px;
 }
 
-.titulo {
-    font-weight: bold; /* Negrita */
-    font-size: 1.5rem;
-    color: #333;
+.imageArea img {
+    max-height: 420px;
+    max-width: 100%;
+    object-fit: contain;
 }
 
-.detalle {
-    margin: 10px 0;
+.infoArea {
+    border-left: 1px solid #e4e6eb;
+    padding: 36px;
 }
 
-.precio {
-    font-weight: bold; /* Negrita */
-    color: #e44d26;
+.price {
+    color: #050505;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+}
+
+.quantityControl {
+    align-items: center;
+    background: #f0f2f5;
+    border-radius: 999px;
+    display: inline-flex;
+    gap: 18px;
+    padding: 6px 10px;
+}
+
+@media (max-width: 860px) {
+    .detailCard {
+        grid-template-columns: 1fr;
+    }
+
+    .infoArea {
+        border-left: 0;
+        border-top: 1px solid #e4e6eb;
+        padding: 24px;
+    }
+
+    .imageArea {
+        min-height: 320px;
+    }
 }

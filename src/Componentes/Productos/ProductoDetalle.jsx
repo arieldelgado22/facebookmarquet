@@ -1,92 +1,79 @@
-import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useCart } from '../context/CartContext.jsx'; // 1. Importamos el hook
+import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useCart } from '../context/CartContext.jsx';
 import styles from './ProductoDetalle.module.css';
 
 const ProductoDetalle = () => {
-    const { id } = useParams();
-    const [producto, setProducto] = useState(null);
-    const [cargando, setCargando] = useState(true);
-    
-    // 2. Estados y Context
-    const [cantidad, setCantidad] = useState(1); // Empezamos en 1
-    const { addToCart } = useCart();
+  const { id } = useParams();
+  const [producto, setProducto] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [cantidad, setCantidad] = useState(1);
+  const { addToCart } = useCart();
 
-    useEffect(() => {
-        fetch('/data/productos.json')
-            .then(res => res.json())
-            .then(data => {
-                const encontrado = data.find(p => p.id == id);
-                setProducto(encontrado);
-                setCargando(false);
-            })
-            .catch(err => {
-                console.error("Error cargando el JSON:", err);
-                setCargando(false);
-            });
-    }, [id]);
+  useEffect(() => {
+    fetch('/data/productos.json')
+      .then((res) => res.json())
+      .then((data) => {
+        const encontrado = data.find((p) => String(p.id) === String(id));
+        setProducto(encontrado);
+        setCargando(false);
+      })
+      .catch((err) => {
+        console.error('Error cargando el JSON:', err);
+        setCargando(false);
+      });
+  }, [id]);
 
-    // 3. Funciones de control
-    const incrementar = () => {
-        if (cantidad < producto.stock) setCantidad(prev => prev + 1);
-    };
+  const incrementar = () => {
+    if (cantidad < producto.stock) setCantidad((prev) => prev + 1);
+  };
 
-    const decrementar = () => {
-        if (cantidad > 1) setCantidad(prev => prev - 1);
-    };
+  const decrementar = () => {
+    if (cantidad > 1) setCantidad((prev) => prev - 1);
+  };
 
-    const handleOnAdd = () => {
-        addToCart(producto, cantidad);
-        alert(`Agregaste ${cantidad} ${producto.nombre} al carrito 🛒`);
-    };
+  const handleOnAdd = () => {
+    addToCart(producto, cantidad);
+    alert(`Agregaste ${cantidad} ${producto.nombre} al carrito.`);
+  };
 
-    if (cargando) return <div className={styles.container}><h3>Cargando fierros...</h3></div>;
-    if (!producto) return <div className={styles.container}><h3>Producto no encontrado</h3></div>;
+  if (cargando) return <div className="marketplace-shell text-center py-5"><h3>Cargando producto...</h3></div>;
+  if (!producto) return <div className="marketplace-shell text-center py-5"><h3>Producto no encontrado</h3></div>;
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.card}>
-                <div className={styles.imageContainer}>
-                    <img src={producto.imagen} alt={producto.nombre} className={styles.mainImage} />
-                </div>
-                
-                <div className={styles.content}>
-                    <nav className={styles.breadcrumb}>
-                        <Link to="/productos">Marketplace</Link> / {producto.nombre}
-                    </nav>
-                    
-                    <h2 className={styles.title}>{producto.nombre}</h2>
-                    <p className={styles.price}>$ {producto.precio}</p>
-                    <p className={styles.description}>{producto.descripcion || "Sin descripción disponible."}</p>
-
-                    {/* 4. Selector de cantidad y botón de compra */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
-                        <div style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            background: '#f0f2f5', 
-                            borderRadius: '50px', 
-                            padding: '5px 15px' 
-                        }}>
-                            <button onClick={decrementar} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '20px' }}>-</button>
-                            <span style={{ margin: '0 15px', fontWeight: 'bold' }}>{cantidad}</span>
-                            <button onClick={incrementar} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '20px' }}>+</button>
-                        </div>
-                        <span style={{ color: '#65676b', fontSize: '0.9rem' }}>{producto.stock} disponibles</span>
-                    </div>
-
-                    <button 
-                        className={styles.mainButton} 
-                        onClick={handleOnAdd}
-                    >
-                        Agregar al carrito
-                    </button>
-                    
-                    <Link to="/productos" className={styles.backLink}>Volver al listado</Link>
-                </div>
-            </div>
+  return (
+    <section className="marketplace-shell">
+      <div className={`${styles.card} marketplace-panel`}>
+        <div className={styles.imageContainer}>
+          <img src={producto.imagen} alt={producto.nombre} className={styles.mainImage} />
         </div>
-    );
+
+        <div className={styles.content}>
+          <nav className="small text-secondary mb-3">
+            <Link to="/productos" className="fw-semibold">Marketplace</Link> / {producto.nombre}
+          </nav>
+
+          <h1 className="h2 fw-bold mb-2">{producto.nombre}</h1>
+          <p className={styles.price}>$ {Number(producto.precio).toLocaleString('es-AR')}</p>
+          <p className="text-secondary mb-4">{producto.descripcion || 'Sin descripcion disponible.'}</p>
+
+          <div className="d-flex align-items-center gap-3 mb-4">
+            <div className={styles.quantityControl}>
+              <button className="btn btn-light rounded-circle" type="button" onClick={decrementar}>-</button>
+              <span className="fw-bold">{cantidad}</span>
+              <button className="btn btn-light rounded-circle" type="button" onClick={incrementar}>+</button>
+            </div>
+            <span className="text-secondary small">{producto.stock} disponibles</span>
+          </div>
+
+          <button className="btn btn-fb btn-lg w-100 mb-3" type="button" onClick={handleOnAdd}>
+            Agregar al carrito
+          </button>
+
+          <Link to="/productos" className="btn btn-fb-soft w-100">Volver al listado</Link>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default ProductoDetalle;

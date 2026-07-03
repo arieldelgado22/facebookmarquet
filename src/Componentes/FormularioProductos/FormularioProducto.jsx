@@ -1,88 +1,119 @@
-export function FormularioProducto({ datosForm, manejarCambio, manejarEnvio, loading }) {
-  
+export function FormularioProducto({
+  datosForm,
+  esEdicion = false,
+  imagenArchivo,
+  manejarCambio,
+  manejarEnvio,
+  manejarImagen,
+  loading,
+}) {
+  const preview = imagenArchivo ? URL.createObjectURL(imagenArchivo) : datosForm.imagen;
+
   return (
-    <form 
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        maxWidth: '400px',
-        margin: '2rem auto',
-        padding: '2rem',
-        backgroundColor: '#fff',
-        borderRadius: '12px',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        gap: '15px',
-        fontFamily: 'sans-serif'
-      }} 
-      onSubmit={manejarEnvio}
-    >
-      <h3 style={{ textAlign: 'center', color: '#1c1e21' }}>Nuevo Producto</h3>
+    <form className="marketplace-panel p-4" onSubmit={manejarEnvio}>
+      <div className="d-flex align-items-center justify-content-between gap-3 mb-4">
+        <div>
+          <span className="badge text-bg-light border mb-2">Firestore</span>
+          <h3 className="h4 fw-bold mb-0">{esEdicion ? 'Editar producto' : 'Nuevo producto'}</h3>
+        </div>
+        <span className="text-secondary small">{esEdicion ? 'Modo edicion' : 'Alta nueva'}</span>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Nombre del Producto"
-        name="nombre"
-        value={datosForm.nombre}
-        onChange={manejarCambio}
-        style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ddd' }}
-        required
-      />
+      <div className="row g-3">
+        <div className="col-md-6">
+          <label className="form-label fw-semibold" htmlFor="nombre">Nombre</label>
+          <input
+            className="form-control"
+            id="nombre"
+            name="nombre"
+            placeholder="Nombre del producto"
+            required
+            type="text"
+            value={datosForm.nombre}
+            onChange={manejarCambio}
+          />
+        </div>
 
-      <input
-        type="number"
-        placeholder="Precio"
-        name="precio"
-        value={datosForm.precio}
-        onChange={manejarCambio}
-        style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ddd' }}
-        required
-      />
+        <div className="col-md-6">
+          <label className="form-label fw-semibold" htmlFor="categoria">Categoria</label>
+          <input
+            className="form-control"
+            id="categoria"
+            name="categoria"
+            placeholder="Ej: electronica"
+            type="text"
+            value={datosForm.categoria}
+            onChange={manejarCambio}
+          />
+        </div>
 
-      <input
-        type="number"
-        placeholder="Stock"
-        name="stock"
-        value={datosForm.stock}
-        onChange={manejarCambio}
-        style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ddd' }}
-        required
-      />
+        <div className="col-md-6">
+          <label className="form-label fw-semibold" htmlFor="precio">Precio</label>
+          <input
+            className="form-control"
+            id="precio"
+            min="0"
+            name="precio"
+            placeholder="Precio"
+            required
+            type="number"
+            value={datosForm.precio}
+            onChange={manejarCambio}
+          />
+        </div>
 
-      {/* Input de URL de imagen como estaba antes */}
-      <input
-        type="text"
-        placeholder="URL de la imagen (http://...)"
-        name="urlImagen"
-        value={datosForm.urlImagen}
-        onChange={manejarCambio}
-        style={{ padding: '10px', borderRadius: '6px', border: '1px solid #ddd' }}
-        required
-      />
+        <div className="col-md-6">
+          <label className="form-label fw-semibold" htmlFor="stock">Stock</label>
+          <input
+            className="form-control"
+            id="stock"
+            min="0"
+            name="stock"
+            placeholder="Stock"
+            required
+            type="number"
+            value={datosForm.stock}
+            onChange={manejarCambio}
+          />
+        </div>
 
-      {/* Vista previa de la imagen si hay una URL cargada */}
-      {datosForm.urlImagen && (
-        <img 
-          src={datosForm.urlImagen} 
-          alt="Preview" 
-          style={{ width: '100%', height: '150px', objectFit: 'contain', borderRadius: '8px' }}
-        />
+        <div className="col-12">
+          <label className="form-label fw-semibold" htmlFor="imagenArchivo">Subir imagen</label>
+          <input
+            accept="image/*"
+            className="form-control"
+            id="imagenArchivo"
+            name="imagenArchivo"
+            type="file"
+            onChange={manejarImagen}
+          />
+          <div className="form-text">
+            Podes subir un archivo desde tu PC. Si no configuraste API key, se guarda comprimida en la base de datos.
+          </div>
+        </div>
+
+        <div className="col-12">
+          <label className="form-label fw-semibold" htmlFor="imagen">URL de imagen</label>
+          <input
+            className="form-control"
+            id="imagen"
+            name="imagen"
+            placeholder="https://..."
+            type="text"
+            value={datosForm.imagen}
+            onChange={manejarCambio}
+          />
+        </div>
+      </div>
+
+      {preview && (
+        <div className="bg-light border rounded-3 d-flex align-items-center justify-content-center mt-4 p-3" style={{ minHeight: '180px' }}>
+          <img src={preview} alt="Preview" style={{ maxHeight: '160px', maxWidth: '100%', objectFit: 'contain' }} />
+        </div>
       )}
 
-      <button 
-        type="submit" 
-        disabled={loading}
-        style={{
-          backgroundColor: loading ? '#bcc0c4' : '#1877f2',
-          color: 'white',
-          border: 'none',
-          padding: '12px',
-          borderRadius: '8px',
-          fontWeight: 'bold',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          marginTop: '10px'
-        }}
-      >
-        {loading ? "Guardando..." : "Guardar Producto"}
+      <button className="btn btn-fb w-100 mt-4" disabled={loading} type="submit">
+        {loading ? 'Guardando...' : 'Guardar producto'}
       </button>
     </form>
   );
